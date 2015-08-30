@@ -1,7 +1,8 @@
 stacktrace
 ==========
 
-A tiny Go library to get stacktrace.
+A Go library to get stacktrace for logging using only one shared buffer without other buffer memory allocation.
+Note memory allocations may occur in [runtime.Stack](http://golang.org/pkg/runtime/#Stack).
 
 ## Usage
 

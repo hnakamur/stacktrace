@@ -16,10 +16,6 @@ var stackBuf struct {
 
 const lf = 0x0A
 
-func LockBufAndGetStack() []byte {
-	return LockBufAndGetStackWithSkip(2)
-}
-
 func LockBufAndGetStackWithSkip(skip uint) []byte {
 	stackBuf.mu.Lock()
 

@@ -16,24 +16,24 @@ var stackBuf struct {
 
 const lf = 0x0A
 
-func Stack() []byte {
-	// NOTE: 1 for this function
-	return StackWithSkip(1 + 1)
+func LockBufAndGetStack() []byte {
+	return LockBufAndGetStackWithSkip(2)
 }
 
-func StackWithSkip(skip uint) []byte {
+func LockBufAndGetStackWithSkip(skip uint) []byte {
 	stackBuf.mu.Lock()
-	defer stackBuf.mu.Unlock()
 
 	n := runtime.Stack(stackBuf.buf[:], false)
 
 	start1 := indexLineStart(stackBuf.buf[:n], 1)
 	start2 := indexLineStart(stackBuf.buf[:n], 2*skip+1)
 
-	buf := make([]byte, n-(start2-start1))
-	copy(buf, stackBuf.buf[:start1])
-	copy(buf[start1:], stackBuf.buf[start2:])
-	return buf
+	copy(stackBuf.buf[start1:], stackBuf.buf[start2:n])
+	return stackBuf.buf[:n-(start2-start1)]
+}
+
+func UnlockBuf() {
+	stackBuf.mu.Unlock()
 }
 
 func indexLineStart(buf []byte, count uint) int {

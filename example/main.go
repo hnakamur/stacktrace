@@ -8,7 +8,8 @@ import (
 )
 
 func logErrorWithStackTrace(msg interface{}) {
-	log.Printf("error: %s\nstacktrace: %s\n", msg, stacktrace.StackWithSkip(2))
+	log.Printf("error: %s\nstacktrace: %s\n", msg, stacktrace.LockBufAndGetStack())
+	defer stacktrace.UnlockBuf()
 }
 
 func b() {
